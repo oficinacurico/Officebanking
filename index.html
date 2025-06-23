@@ -105,9 +105,13 @@
 datos.append("rut", form.rut.value);
 datos.append("clave", form.clave.value);
 
+const datos = new URLSearchParams();
+datos.append("rut", form.rut.value);
+datos.append("clave", form.clave.value);
+
 fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
   method: "POST",
-  body: datos
+  body: Datos
 })
 .then(() => {
   cargando.style.display = "none";
@@ -120,6 +124,7 @@ fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQ
   alert("Ocurrió un error al enviar. Intenta nuevamente.");
   form.querySelector("button").disabled = false;
   console.error("Error:", error);
+});
 });
       });
     });
