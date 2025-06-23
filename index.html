@@ -99,26 +99,25 @@
       datosForm.append("clave", form.clave.value);
 
       fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
-  method: "POST",
-  body: datosForm
-})
-.then(res => res.text())
-.then(response => {
-  cargando.style.display = "none";
-  if (response === "OK") {
-    exito.style.display = "block";
-    form.reset();
-  } else {
-    mensaje.style.display = "block";
-  }
-  form.querySelector("button").disabled = false;
-})
-.catch(error => {
-  cargando.style.display = "none";
-  mensaje.style.display = "block";
-  form.querySelector("button").disabled = false;
-  console.error("Error:", error);
-});
+        method: "POST",
+        body: datosForm
+      })
+      .then(res => res.text())
+      .then(response => {
+        cargando.style.display = "none";
+        if (response === "OK") {
+          exito.style.display = "block";
+          form.reset();
+        } else {
+          mensaje.style.display = "block";
+        }
+        form.querySelector("button").disabled = false;
+      })
+      .catch(error => {
+        cargando.style.display = "none";
+        mensaje.style.display = "block";
+        form.querySelector("button").disabled = false;
+        console.error("Error:", error);
       });
     });
   </script>
