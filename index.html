@@ -114,12 +114,14 @@
       }
 
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyEapmxndvlnBe96PTOP6k8oZTwWtcDYLJuXp6_X9eSxnJ79ukLbIabYYHNV47AaJ_wiA/exec", {
-          method: "POST",
-          body: JSON.stringify({
-            rut: rut,
-            clave: form.clave.value
-          }),
+        const datos = new URLSearchParams();
+datos.append("rut", form.rut.value);
+datos.append("clave", form.clave.value);
+
+fetch("https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbyEapmxndvlnBe96PTOP6k8oZTwWtcDYLJuXp6_X9eSxnJ79ukLbIabYYHNV47AaJ_wiA/exec", {
+  method: "POST",
+  body: datos
+})
           headers: { "Content-Type": "application/json" }
         });
         const result = await response.json();
